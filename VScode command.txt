@@ -1,0 +1,25 @@
+//utworzenie solucji
+dotnet new sln
+
+//utworzenie projektu biblioteki
+dotnet new classlib -o library
+
+//utworzenie projektu aplikacji konsolowej
+dotnet new console -o app
+
+//dodanie projektu do solucji'
+dotnet sln add library/library.csproj
+
+//dodanie pakietu EF
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.EntityFrameworkCore.Tools.DotNet
+
+//utworzenie migracji
+dotnet ef  migrations add CreateDatabase
+dotnet ef database update
+
+dotnet restore
+dotnet build
+dotnet run
