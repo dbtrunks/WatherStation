@@ -20,6 +20,10 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools.DotNet
 dotnet ef  migrations add CreateDatabase
 dotnet ef database update
 
+//Nunit
+dotnet add package Nunit
+dotnet add package NUnitLite
+
 dotnet restore
 dotnet build
 dotnet run
