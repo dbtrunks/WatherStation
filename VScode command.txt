@@ -15,6 +15,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet add package Microsoft.EntityFrameworkCore.Tools.DotNet
+dotnet add package Moq
 
 //utworzenie migracji
 dotnet ef  migrations add CreateDatabase
