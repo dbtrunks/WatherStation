@@ -13,5 +13,21 @@ namespace Data
                 return result;
             }  
         }
+
+        public void SaveTemperatureMeasurement(WatherStation watherStation, decimal temperature)
+        {
+            using (var db = new MyDbContext())
+            {
+                var temperatureMeasurement = db.Set<TemperatureMeasurement>();
+                temperatureMeasurement.Add(new TemperatureMeasurement
+                {
+                    WatherStation = watherStation,
+                    Temperature = temperature,
+                    DateTime = DateTime.Now
+                });
+
+                db.SaveChanges();
+            }  
+        }
     }
 }

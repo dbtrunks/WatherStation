@@ -8,7 +8,7 @@ using Data;
 namespace Data.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20170606203122_CreateDatabase")]
+    [Migration("20170710221337_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,11 +41,11 @@ namespace Data.Migrations
                     b.Property<decimal>("Temperature")
                         .HasColumnType("decimal(9,4)");
 
-                    b.Property<int?>("WatherStationIdId");
+                    b.Property<int?>("WatherStationId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WatherStationIdId");
+                    b.HasIndex("WatherStationId");
 
                     b.ToTable("TemperatureMeasurement");
                 });
@@ -66,9 +66,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.TemperatureMeasurement", b =>
                 {
-                    b.HasOne("Data.WatherStation", "WatherStationId")
+                    b.HasOne("Data.WatherStation", "WatherStation")
                         .WithMany()
-                        .HasForeignKey("WatherStationIdId");
+                        .HasForeignKey("WatherStationId");
                 });
         }
     }

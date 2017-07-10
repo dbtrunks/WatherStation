@@ -45,23 +45,23 @@ namespace Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DateTime = table.Column<DateTime>(nullable: false),
                     Temperature = table.Column<decimal>(type: "decimal(9,4)", nullable: false),
-                    WatherStationIdId = table.Column<int>(nullable: true)
+                    WatherStationId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TemperatureMeasurement", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TemperatureMeasurement_WatherStation_WatherStationIdId",
-                        column: x => x.WatherStationIdId,
+                        name: "FK_TemperatureMeasurement_WatherStation_WatherStationId",
+                        column: x => x.WatherStationId,
                         principalTable: "WatherStation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TemperatureMeasurement_WatherStationIdId",
+                name: "IX_TemperatureMeasurement_WatherStationId",
                 table: "TemperatureMeasurement",
-                column: "WatherStationIdId");
+                column: "WatherStationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

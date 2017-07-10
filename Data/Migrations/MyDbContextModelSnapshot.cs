@@ -40,11 +40,11 @@ namespace Data.Migrations
                     b.Property<decimal>("Temperature")
                         .HasColumnType("decimal(9,4)");
 
-                    b.Property<int?>("WatherStationIdId");
+                    b.Property<int?>("WatherStationId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WatherStationIdId");
+                    b.HasIndex("WatherStationId");
 
                     b.ToTable("TemperatureMeasurement");
                 });
@@ -65,9 +65,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.TemperatureMeasurement", b =>
                 {
-                    b.HasOne("Data.WatherStation", "WatherStationId")
+                    b.HasOne("Data.WatherStation", "WatherStation")
                         .WithMany()
-                        .HasForeignKey("WatherStationIdId");
+                        .HasForeignKey("WatherStationId");
                 });
         }
     }
