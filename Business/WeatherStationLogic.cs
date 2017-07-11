@@ -35,5 +35,10 @@ namespace Business
         
                 _watherStationRepository.SaveTemperatureMeasurement(watherStation, temperature);
         }
+
+        public TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey)
+        {
+            return _watherStationRepository.GetLastTemperatureMeasurement(externalKey);
+        }
     }
 }

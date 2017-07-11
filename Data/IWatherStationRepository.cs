@@ -6,5 +6,6 @@ namespace Data
     {
       WatherStation GetWatherStationByExternalKey(string externalKey);
       void SaveTemperatureMeasurement(WatherStation watherStation, decimal temperature);
+      TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey);
     }
 }

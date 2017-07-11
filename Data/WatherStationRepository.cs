@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
@@ -28,6 +29,15 @@ namespace Data
 
                 db.SaveChanges();
             }  
+        }
+
+        public TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey)
+        {
+            using (var db = new MyDbContext())
+            {
+                var result = db.TemperatureMeasurement.Include("WatherStation").OrderByDescending(t => t.Id).FirstOrDefault(t => t.WatherStation.ExternalKey.ToString() == externalKey);
+                return result;
+            }
         }
     }
 }
