@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,36 +7,45 @@ namespace Data
 {
     public class WatherStationRepository : IWatherStationRepository
     {       
-        public WatherStation GetWatherStationByExternalKey(string externalKey)
+        public WatherStation GetWatherStationByExternalKey(Guid externalKey)
         {
             using (var db = new MyDbContext())
             {
-                var result =  db.WatherStation.Where(x => x.ExternalKey.ToString() == externalKey).FirstOrDefault();
+                var result =  db.WatherStation.Where(x => x.ExternalKey == externalKey).FirstOrDefault();
                 return result;
             }  
         }
 
-        public void SaveTemperatureMeasurement(WatherStation watherStation, decimal temperature)
+        public void SaveTemperatureMeasurement(int watherStationID, decimal temperature)
         {
             using (var db = new MyDbContext())
             {
-                var temperatureMeasurement = db.Set<TemperatureMeasurement>();
-                temperatureMeasurement.Add(new TemperatureMeasurement
+                var tm = new TemperatureMeasurement
                 {
-                    WatherStation = watherStation,
                     Temperature = temperature,
                     DateTime = DateTime.Now
-                });
+                };
+                tm.WatherStation = db.WatherStation.Where(x => x.Id == watherStationID).First();
+                db.TemperatureMeasurement.Add(tm);
 
                 db.SaveChanges();
             }  
         }
 
-        public TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey)
+        public TemperatureMeasurement GetLastTemperatureMeasurement(Guid externalKey)
         {
             using (var db = new MyDbContext())
             {
-                var result = db.TemperatureMeasurement.Include("WatherStation").OrderByDescending(t => t.Id).FirstOrDefault(t => t.WatherStation.ExternalKey.ToString() == externalKey);
+                var result = db.TemperatureMeasurement.Include("WatherStation").OrderByDescending(t => t.Id).FirstOrDefault(t => t.WatherStation.ExternalKey == externalKey);
+                return result;
+            }
+        }
+
+        public List<TemperatureMeasurement> GetTemperatureMeasurements(Guid externalKey)
+        {
+            using (var db = new MyDbContext())
+            {
+                var result = db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey).ToList();
                 return result;
             }
         }

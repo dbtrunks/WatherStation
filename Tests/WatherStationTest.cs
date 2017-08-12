@@ -13,7 +13,7 @@ namespace Tests
             WatherStation watherStation = new WatherStation(){ Name= "TestWatherStation", ExternalKey = new Guid()};
 
             Mock<IWatherStationRepository> mockWatherStationRepository= new Mock<IWatherStationRepository>();
-            mockWatherStationRepository.Setup(x=>x.GetWatherStationByExternalKey(watherStation.ExternalKey.ToString())).Returns(watherStation);
+            mockWatherStationRepository.Setup(x=>x.GetWatherStationByExternalKey(watherStation.ExternalKey)).Returns(watherStation);
             var ws = new WeatherStationLogic(mockWatherStationRepository.Object);
             WatherStation results = ws.GetWatherStation(watherStation.ExternalKey.ToString());
 
@@ -36,5 +36,6 @@ namespace Tests
             Assert.False(results2);
             Assert.False(results3);
         }
+
     }
 }

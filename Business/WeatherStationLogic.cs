@@ -1,5 +1,6 @@
 ﻿using System;
 using Data;
+using System.Collections.Generic;
 
 namespace Business
 {
@@ -12,7 +13,7 @@ namespace Business
         }
         public WatherStation GetWatherStation(string externalKey)
         {
-            var result = _watherStationRepository.GetWatherStationByExternalKey(externalKey);
+            var result = _watherStationRepository.GetWatherStationByExternalKey(new Guid(externalKey));
             return result;// new WatherStation(){ Name= "TestWatherStation", ExternalKey = new Guid(externalKey)};
         }
 
@@ -26,19 +27,24 @@ namespace Business
 
         public void SaveTemperatureMeasurement(string externalKey, decimal temperature)
         {
-            var watherStation = _watherStationRepository.GetWatherStationByExternalKey(externalKey);
+            var watherStation = _watherStationRepository.GetWatherStationByExternalKey(new Guid(externalKey));
             if(watherStation == null)
                 throw new ArgumentException(string.Format("Nie znaleziono stacji pogodowej o podanym kluczu {0}.",externalKey), "watherStation");
                 
             if(!CheckTemperatureRange(temperature))
                 throw new ArgumentException(string.Format("Podana teperatura {0} nie miesci sie w przyjętym zakresie. ",temperature));
         
-                _watherStationRepository.SaveTemperatureMeasurement(watherStation, temperature);
+                _watherStationRepository.SaveTemperatureMeasurement(watherStation.Id, temperature);
         }
 
         public TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey)
         {
-            return _watherStationRepository.GetLastTemperatureMeasurement(externalKey);
+            return _watherStationRepository.GetLastTemperatureMeasurement(new Guid(externalKey));
+        }
+
+        public List<TemperatureMeasurement> GetTemperatureMeasurements(string externalKey)
+        {
+            return _watherStationRepository.GetTemperatureMeasurements(new Guid(externalKey));
         }
     }
 }

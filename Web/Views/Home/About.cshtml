@@ -1,7 +1,16 @@
-﻿@{
-    ViewData["Title"] = "About";
-}
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
+﻿@model  Web.Controllers.ModelPost
 
-<p>Use this area to provide additional information.</p>
+<h2>@ViewData["Title"].</h2>
+<h3>Teperatura: @ViewData["Temperature"] &#176;C</h3>
+
+@using(Html.BeginForm()){
+  <div class="form-group">
+    @Html.LabelFor(model => model.ExternalKey)
+    @Html.TextBoxFor(model => model.ExternalKey, new { @class="form-control"}) 
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(model => model.Temperature)
+    @Html.TextBoxFor(model => model.Temperature, new { @class="form-control"}) 
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+}
