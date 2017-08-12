@@ -17,7 +17,7 @@ namespace Tests
             var ws = new WeatherStationLogic(mockWatherStationRepository.Object);
             WatherStation results = ws.GetWatherStation(watherStation.ExternalKey.ToString());
 
-            Assert.NotNull(results);//, "Nie znaleziono stacji pogodowej o podanym kluczu.");
+            Assert.NotNull(results);
             Assert.Equal(watherStation,results);
         }
 
@@ -28,9 +28,9 @@ namespace Tests
             decimal temp2 = 121.8M;
             decimal temp3 = -100.7M;
             var ws = new WeatherStationLogic(new WatherStationRepository());
-            bool results1 = ws.CheckTemperatureRange(temp1);
-            bool results2 = ws.CheckTemperatureRange(temp2);
-            bool results3 = ws.CheckTemperatureRange(temp3);
+            bool results1 = ws.TemperatureRangeIsCorrect(temp1);
+            bool results2 = ws.TemperatureRangeIsCorrect(temp2);
+            bool results3 = ws.TemperatureRangeIsCorrect(temp3);
 
             Assert.True(results1);
             Assert.False(results2);

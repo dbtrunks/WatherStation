@@ -16,7 +16,7 @@ namespace Web.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Temperature()
         {
             var ws = new WeatherStationLogic(new WatherStationRepository());
             ViewData["Temperature"] = ws.GetLastTemperatureMeasurement("2106E356-4F23-4167-AC8F-D45290A20F9A").Temperature.ToString("##.##");
@@ -24,7 +24,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult About([Bind("ExternalKey, Temperature")] ModelPost modelPost)
+        public IActionResult Temperature([Bind("ExternalKey, Temperature")] ModelPost modelPost)
         {
             if(String.IsNullOrEmpty(modelPost.ExternalKey))
             {
