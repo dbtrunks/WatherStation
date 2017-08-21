@@ -1,10 +1,164 @@
 ﻿
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
 <h2>Pomiar tęperatury</h2>
 
-   @foreach (var @m in @Model)
+   @*@foreach (var @m in @Model)
    {
        <div> @m.DateTime, @String.Format("{0:n2}", @m.Temperature) &#176;C</div>
-   }
+   }*@
+
+@Html.DropDownList("SelectDate", ViewBag.DateList as SelectList, new { @class = "form-control" })
+
+<!-- Graph HTML -->
+<div id="graph-wrapper">
+    <div class="graph-info">
+        <a href="javascript:void(0)" class="visitors">Visitors</a>
+        <a href="javascript:void(0)" class="returning">Returning Visitors</a>
+
+        <a href="#" id="bars"><span></span></a>
+        <a href="#" id="lines" class="active"><span></span></a>
+    </div>
+
+    <div class="graph-container">
+        <div id="graph-lines"></div>
+        <div id="graph-bars"></div>
+    </div>
+</div>
+<!-- end Graph HTML -->
 
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="~/js/jquery.flot.min.js"></script>
+<script>
+
+ 	var graphData = [{
+			// Visits
+			data: [ [6, 1300], [7, 1600], [8, 1900], [9, 2100], [10, 2500], [11, 2200], [12, 2000], [13, 1950], [14, 1900], [15, 2000] ],
+			color: '#71c73e'
+		}, {
+			// Returning Visits
+			data: [ [6, 500], [7, 600], [8, 550], [9, 600], [10, 800], [11, 900], [12, 800], [13, 850], [14, 830], [15, 1000] ],
+			color: '#77b7c5',
+			points: { radius: 4, fillColor: '#77b7c5' }
+		}
+    ];
+        var data = [];
+        data.push([0, null]);
+       @foreach (var @m in @Model)
+       {
+          <text>
+            data.push([ @m.DateTime.ToString("HH.mm"),    @m.Temperature.ToString("0.00", @System.Globalization.CultureInfo.InvariantCulture) ]);
+          </text>
+       }
+            data.push([24, null]);
+            var graphData = [{
+                data: data,
+                color: '#71c73e'
+            }];
+
+             graphData.push({
+                 data: [[2.00, 19], [4.10, 20], [7.00, 25], [7.00, 25], [7.15, 35.6], [8, 23.8], [9, -11], [10, 20], [11, 22], [12, 20], [13, 19], [14, 19], [15, 20], [17, 18], [22, 16]],
+                color: '#11ccae'
+            });
+
+	// Lines Graph #############################################
+	$.plot($('#graph-lines'), graphData, {
+		series: {
+			points: {
+				show: true,
+				radius: 4
+			},
+			lines: {
+				show: true
+			},
+			shadowSize: 0
+		},
+		grid: {
+			color: '#646464',
+			borderColor: 'transparent',
+			borderWidth: 10,
+			hoverable: true
+		},
+		xaxis: {
+			tickColor: 'transparent',
+			tickDecimals: 2
+		},
+		yaxis: {
+			tickSize: 10
+		}
+	});
+
+	// Bars Graph ##############################################
+	$.plot($('#graph-bars'), graphData, {
+		series: {
+			bars: {
+				show: true,
+				barWidth: .2,
+				align: 'center'
+			},
+			shadowSize: 0
+		},
+		grid: {
+			color: '#646464',
+			borderColor: 'transparent',
+			borderWidth: 10,
+			hoverable: true
+		},
+		xaxis: {
+			tickColor: 'transparent',
+			tickDecimals: 2
+		},
+		yaxis: {
+			tickSize: 10
+		}
+	});
+
+	// Graph Toggle ############################################
+	$('#graph-bars').hide();
+
+	$('#lines').on('click', function (e) {
+		$('#bars').removeClass('active');
+		$('#graph-bars').fadeOut();
+		$(this).addClass('active');
+		$('#graph-lines').fadeIn();
+		e.preventDefault();
+	});
+
+	$('#bars').on('click', function (e) {
+		$('#lines').removeClass('active');
+		$('#graph-lines').fadeOut();
+		$(this).addClass('active');
+		$('#graph-bars').fadeIn().removeClass('hidden');
+		e.preventDefault();
+	});
+
+	// Tooltip #################################################
+	function showTooltip(x, y, contents) {
+		$('<div id="tooltip">' + contents + '</div>').css({
+			top: y - 12,
+			left: x + 20
+		}).appendTo('body').fadeIn();
+	}
+
+	var previousPoint = null;
+
+	$('#graph-lines, #graph-bars').bind('plothover', function (event, pos, item) {
+		if (item) {
+			if (previousPoint != item.dataIndex) {
+				previousPoint = item.dataIndex;
+				$('#tooltip').remove();
+				var x = item.datapoint[0],
+					y = item.datapoint[1];
+                showTooltip(item.pageX, item.pageY, x + ' ' + y + '&#176;C');
+			}
+		} else {
+			$('#tooltip').remove();
+			previousPoint = null;
+		}
+	});
+
+
+</script>

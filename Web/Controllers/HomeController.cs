@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Business;
 using Data;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Web.Controllers
 {
@@ -41,6 +42,10 @@ namespace Web.Controllers
         {
             var ws = new WeatherStationLogic(new WatherStationRepository());
             var model = ws.GetTemperatureMeasurements("2106E356-4F23-4167-AC8F-D45290A20F9A");
+            //return View(model);
+            var model2 = ws.GetTemperatureMeasurements("2106E356-4F23-4167-AC8F-D45290A20F9A").GroupBy(t => t.DateTime.Date).Select(grp => grp.ToList()).ToList();
+            var selectList = model2.Select(m => m[0].DateTime.Date).OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
+            ViewBag.DateList = new SelectList(selectList, selectList.FirstOrDefault());
             return View(model);
         }
 
@@ -55,4 +60,5 @@ namespace Web.Controllers
         public string ExternalKey {get; set;}
         public decimal Temperature {get; set;}
     }
+
 }
