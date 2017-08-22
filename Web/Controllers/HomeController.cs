@@ -7,6 +7,7 @@ using Business;
 using Data;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Globalization;
 
 namespace Web.Controllers
 {
@@ -38,14 +39,19 @@ namespace Web.Controllers
             return  View();
         }
 
-        public IActionResult Contact()
+        [HttpGet]
+        public IActionResult Contact(string  id)
         {
+            DateTime? dateTemp = null;
+            if (!String.IsNullOrEmpty(id))
+            dateTemp = DateTime.ParseExact(id,"yyyyMMdd", CultureInfo.InvariantCulture);
+
             var ws = new WeatherStationLogic(new WatherStationRepository());
-            var model = ws.GetTemperatureMeasurements("2106E356-4F23-4167-AC8F-D45290A20F9A");
-            //return View(model);
-            var model2 = ws.GetTemperatureMeasurements("2106E356-4F23-4167-AC8F-D45290A20F9A").GroupBy(t => t.DateTime.Date).Select(grp => grp.ToList()).ToList();
-            var selectList = model2.Select(m => m[0].DateTime.Date).OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
-            ViewBag.DateList = new SelectList(selectList, selectList.FirstOrDefault());
+            var model = ws.GetTemperatureMeasurements("2106E356-4F23-4167-AC8F-D45290A20F9A", dateTemp);
+
+            var dateMeasure = ws.GetTemperatureMeasurementsDates("2106E356-4F23-4167-AC8F-D45290A20F9A");
+            var selectList = dateMeasure.OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
+            ViewBag.DateList = new SelectList(selectList, dateTemp.HasValue ? dateTemp.Value.ToString("yyyy.MM.dd") : selectList.FirstOrDefault());
             return View(model);
         }
 
