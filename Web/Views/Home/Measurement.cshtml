@@ -1,13 +1,9 @@
 ﻿
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-
 <h2>Pomiar tęperatury</h2>
 
-   @*@foreach (var @m in @Model)
-   {
-       <div> @m.DateTime, @String.Format("{0:n2}", @m.Temperature) &#176;C</div>
-   }*@
+@Html.DropDownList("SelectWatherStation", ViewBag.WatherStationList as SelectList, new {@disabled = "disabled", @class = "form-control" })
 
 @Html.DropDownList("SelectDate", ViewBag.DateList as SelectList, new { @class = "form-control" })
 
@@ -33,13 +29,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="~/js/jquery.flot.min.js"></script>
 <script>
+    $("#SelectWatherStation").change(function () {
+        var strSelected = "";
+        $("#SelectWatherStation option:selected").each(function () {
+            strSelected += $(this)[0].value;
+        });
+        var url = "/Home/Measurement/" + strSelected;
+        location.href = url;
+    });
     $("#SelectDate").change(function () {
             var strSelected = "";
+            var strSelectedWS = "";
+            $("#SelectWatherStation option:selected").each(function () {
+                strSelectedWS += $(this)[0].value;
+            });
             $("#SelectDate option:selected").each(function () {
                 strSelected += $(this)[0].value;
             });
             strSelected = strSelected.replace(/\./g, "");
-            var url = "/Home/Contact/" + strSelected;
+            var url = "/Home/Measurement/" + strSelectedWS + "/" + strSelected;
             location.href = url;
         });
 
@@ -70,7 +78,7 @@
             }];
 
              graphData.push({
-                 data: [[2.00, 19], [4.10, 20], [7.00, 25], [7.00, 25], [7.15, 35.6], [8, 23.8], [9, -11], [10, 20], [11, 22], [12, 20], [13, 19], [14, 19], [15, 20], [17, 18], [22, 16]],
+                 data: [[2.00, 19], [4.10, 20], [7.00, 25], [7.00, 25], [7.15, 35.6], [8, 23.8], [9, -5], [10, 20], [11, 22], [12, 20], [13, 19], [14, 19], [15, 20], [17, 18], [22, 16]],
                 color: '#11ccae'
             });
 
@@ -97,7 +105,7 @@
 			tickDecimals: 2
 		},
 		yaxis: {
-			tickSize: 5
+			tickSize: 2
 		}
 	});
 
@@ -122,7 +130,7 @@
 			tickDecimals: 2
 		},
 		yaxis: {
-			tickSize: 5
+			tickSize: 2
 		}
 	});
 

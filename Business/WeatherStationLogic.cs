@@ -42,14 +42,19 @@ namespace Business
             return _watherStationRepository.GetLastTemperatureMeasurement(new Guid(externalKey));
         }
 
-        public List<TemperatureMeasurement> GetTemperatureMeasurements(string externalKey, DateTime? date)
+        public List<TemperatureMeasurement> GetTemperatureMeasurements(Guid externalKey, DateTime? date)
         {
-            return _watherStationRepository.GetTemperatureMeasurements(new Guid(externalKey), date);
+            return _watherStationRepository.GetTemperatureMeasurements(externalKey, date);
         }
 
-        public List<DateTime> GetTemperatureMeasurementsDates(string externalKey)
+        public List<DateTime> GetTemperatureMeasurementsDates(Guid externalKey)
         {
-            return _watherStationRepository.GetTemperatureMeasurementsDates(new Guid(externalKey));
+            return _watherStationRepository.GetTemperatureMeasurementsDates(externalKey);
+        }
+
+        public List<WatherStation> GetWatherStations()
+        {
+            return _watherStationRepository.GetWatherStations();
         }
     }
 }

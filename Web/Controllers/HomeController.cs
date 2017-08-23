@@ -28,30 +28,37 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Temperature([Bind("ExternalKey, Temperature")] ModelPost modelPost)
         {
-            if(String.IsNullOrEmpty(modelPost.ExternalKey))
+            if (String.IsNullOrEmpty(modelPost.ExternalKey))
             {
-              ViewData["Message"] = "Nie podano ExternalKey.";
-              return View();
+                ViewData["Message"] = "Nie podano ExternalKey.";
+                return View();
             }
-            
+
             var ws = new WeatherStationLogic(new WatherStationRepository());
-            ws.SaveTemperatureMeasurement(modelPost.ExternalKey,modelPost.Temperature);
-            return  View();
+            ws.SaveTemperatureMeasurement(modelPost.ExternalKey, modelPost.Temperature);
+            return View();
         }
 
         [HttpGet]
-        public IActionResult Contact(string  id)
+        public IActionResult Measurement(string station, string date)
         {
-            DateTime? dateTemp = null;
-            if (!String.IsNullOrEmpty(id))
-            dateTemp = DateTime.ParseExact(id,"yyyyMMdd", CultureInfo.InvariantCulture);
-
             var ws = new WeatherStationLogic(new WatherStationRepository());
-            var model = ws.GetTemperatureMeasurements("2106E356-4F23-4167-AC8F-D45290A20F9A", dateTemp);
+            DateTime? chosenDateTemp = null;
+            if (!String.IsNullOrEmpty(date))
+                chosenDateTemp = DateTime.ParseExact(date, "yyyyMMdd", CultureInfo.InvariantCulture);
 
-            var dateMeasure = ws.GetTemperatureMeasurementsDates("2106E356-4F23-4167-AC8F-D45290A20F9A");
-            var selectList = dateMeasure.OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
-            ViewBag.DateList = new SelectList(selectList, dateTemp.HasValue ? dateTemp.Value.ToString("yyyy.MM.dd") : selectList.FirstOrDefault());
+            var watherStations = ws.GetWatherStations();
+            var selectWatherStations = watherStations.Select(w => w.Name);
+            WatherStation chosenWatherStation = watherStations.FirstOrDefault();
+            if (!String.IsNullOrEmpty(station))
+                chosenWatherStation = watherStations.Where(w => w.Name == station).FirstOrDefault();
+            ViewBag.WatherStationList = new SelectList(selectWatherStations, chosenWatherStation.Name);
+
+            var dateMeasure = ws.GetTemperatureMeasurementsDates(chosenWatherStation.ExternalKey);
+            var selectDate = dateMeasure.OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
+            ViewBag.DateList = new SelectList(selectDate, chosenDateTemp.HasValue ? chosenDateTemp.Value.ToString("yyyy.MM.dd") : selectDate.FirstOrDefault());
+
+            var model = ws.GetTemperatureMeasurements(chosenWatherStation.ExternalKey, chosenDateTemp);
             return View(model);
         }
 
@@ -63,8 +70,8 @@ namespace Web.Controllers
 
     public class ModelPost
     {
-        public string ExternalKey {get; set;}
-        public decimal Temperature {get; set;}
+        public string ExternalKey { get; set; }
+        public decimal Temperature { get; set; }
     }
 
 }

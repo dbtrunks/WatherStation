@@ -36,7 +36,7 @@ namespace Data
         {
             using (var db = new MyDbContext())
             {
-                var result = db.TemperatureMeasurement.Include("WatherStation").OrderByDescending(t => t.Id).FirstOrDefault(t => t.WatherStation.ExternalKey == externalKey);
+                var result = TemperatureMeasurementQuery(externalKey, db).OrderByDescending(t => t.Id).FirstOrDefault();
                 return result;
             }
         }
@@ -47,11 +47,11 @@ namespace Data
             {
                 List<TemperatureMeasurement> result;
                 if (date.HasValue)
-                    result = db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey && t.DateTime.Date == date.Value.Date).ToList();
+                    result = TemperatureMeasurementQuery(externalKey, db).Where(t => t.DateTime.Date == date.Value.Date).ToList();
                 else
                 {
-                    var lastDate = db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey).Select(l => l.DateTime.Date).LastOrDefault();
-                    result = db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey && t.DateTime.Date == lastDate).ToList();
+                    var lastDate = TemperatureMeasurementQuery(externalKey, db).Select(l => l.DateTime.Date).LastOrDefault();
+                    result = TemperatureMeasurementQuery(externalKey, db).Where(t => t.DateTime.Date == lastDate).ToList();
                 }
                 return result;
             }
@@ -61,10 +61,24 @@ namespace Data
         {
             using (var db = new MyDbContext())
             {
-                var result = db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey).Select(s =>s.DateTime.Date).GroupBy(g => g.Date).Select(grp => grp.FirstOrDefault()).ToList();
+                var result = TemperatureMeasurementQuery(externalKey, db).Select(s => s.DateTime.Date).GroupBy(g => g.Date).Select(grp => grp.FirstOrDefault()).ToList();
                 return result;
             }
+        }
 
+        public List<WatherStation> GetWatherStations()
+        {
+            using (var db = new MyDbContext())
+            {
+                var result = db.WatherStation.ToList();
+                return result;
+            }
+        }
+
+
+        private static IQueryable<TemperatureMeasurement> TemperatureMeasurementQuery(Guid externalKey, MyDbContext db)
+        {
+            return db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey);
         }
     }
 }

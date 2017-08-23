@@ -10,5 +10,6 @@ namespace Data
       TemperatureMeasurement GetLastTemperatureMeasurement(Guid externalKey);
       List<TemperatureMeasurement> GetTemperatureMeasurements(Guid externalKey, DateTime? date);
       List<DateTime> GetTemperatureMeasurementsDates(Guid externalKey);
+      List<WatherStation> GetWatherStations();
     }
 }
