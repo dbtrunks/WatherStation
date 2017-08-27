@@ -1,8 +1,5 @@
 ﻿@model  Web.Controllers.ModelPost
 
-<h2>@ViewData["Title"].</h2>
-<h3>Teperatura: @ViewData["Temperature"] &#176;C</h3>
-
 @using(Html.BeginForm()){
   <div class="form-group">
     @Html.LabelFor(model => model.ExternalKey)

@@ -13,15 +13,18 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string station)
         {
+            var ws = new WeatherStationLogic(new WatherStationRepository());
+            var watherStations = ws.GetWatherStations();
+            var chosenWatherStation = ChoseWatherStation(watherStations, station);
+            ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
+            ViewData["Temperature"] = ws.GetLastTemperatureMeasurement(chosenWatherStation.ExternalKey).Temperature.ToString("##.##");
             return View();
         }
 
         public IActionResult Temperature()
         {
-            var ws = new WeatherStationLogic(new WatherStationRepository());
-            ViewData["Temperature"] = ws.GetLastTemperatureMeasurement("2106E356-4F23-4167-AC8F-D45290A20F9A").Temperature.ToString("##.##");
             return View();
         }
 
@@ -48,11 +51,8 @@ namespace Web.Controllers
                 chosenDateTemp = DateTime.ParseExact(date, "yyyyMMdd", CultureInfo.InvariantCulture);
 
             var watherStations = ws.GetWatherStations();
-            var selectWatherStations = watherStations.Select(w => w.Name);
-            WatherStation chosenWatherStation = watherStations.FirstOrDefault();
-            if (!String.IsNullOrEmpty(station))
-                chosenWatherStation = watherStations.Where(w => w.Name == station).FirstOrDefault();
-            ViewBag.WatherStationList = new SelectList(selectWatherStations, chosenWatherStation.Name);
+            var chosenWatherStation = ChoseWatherStation(watherStations, station);
+            ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
 
             var dateMeasure = ws.GetTemperatureMeasurementsDates(chosenWatherStation.ExternalKey);
             var selectDate = dateMeasure.OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
@@ -65,6 +65,14 @@ namespace Web.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        private WatherStation ChoseWatherStation(List<WatherStation> watherStationList, string station)
+        {
+            if (String.IsNullOrEmpty(station))
+                return watherStationList.FirstOrDefault();
+            else
+                return watherStationList.Where(w => w.Name == station).FirstOrDefault();
         }
     }
 

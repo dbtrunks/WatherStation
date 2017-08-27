@@ -37,9 +37,9 @@ namespace Business
             _watherStationRepository.SaveTemperatureMeasurement(watherStation.Id, temperature);
         }
 
-        public TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey)
+        public TemperatureMeasurement GetLastTemperatureMeasurement(Guid externalKey)
         {
-            return _watherStationRepository.GetLastTemperatureMeasurement(new Guid(externalKey));
+            return _watherStationRepository.GetLastTemperatureMeasurement(externalKey);
         }
 
         public List<TemperatureMeasurement> GetTemperatureMeasurements(Guid externalKey, DateTime? date)
