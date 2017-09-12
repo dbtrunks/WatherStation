@@ -1,13 +1,11 @@
-﻿@model  Web.Controllers.ModelPost
-
-@using(Html.BeginForm()){
+﻿@using(Html.BeginForm()){
   <div class="form-group">
-    @Html.LabelFor(model => model.ExternalKey)
-    @Html.TextBoxFor(model => model.ExternalKey, new { @class="form-control"}) 
+    @Html.Label("ExternalKey")
+    @Html.TextBox("ExternalKey",null, new { @class="form-control"}) 
   </div>
   <div class="form-group">
-    @Html.LabelFor(model => model.Temperature)
-    @Html.TextBoxFor(model => model.Temperature, new { @class="form-control"}) 
+    @Html.Label("Temperature")
+    @Html.TextBox("Temperature",null, new { @class="form-control"}) 
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
 }

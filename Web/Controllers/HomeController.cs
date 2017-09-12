@@ -13,15 +13,21 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
+        readonly WeatherStationLogic _watherStationLogic;
+        public HomeController(IWatherStationRepository watherStationRepository)
+        {
+            _watherStationLogic = new WeatherStationLogic(watherStationRepository);
+        }
+
         public IActionResult Index(string station)
         {
-            var ws = new WeatherStationLogic(new WatherStationRepository());
-            var watherStations = ws.GetWatherStations();
+            var watherStations = _watherStationLogic.GetWatherStations();
             var chosenWatherStation = ChoseWatherStation(watherStations, station);
             ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
-            ViewData["Temperature"] = ws.GetLastTemperatureMeasurement(chosenWatherStation.ExternalKey).Temperature.ToString("##.##");
+            ViewData["Temperature"] = _watherStationLogic.GetLastTemperatureMeasurement(chosenWatherStation.ExternalKey).Temperature.ToString("##.##");
             return View();
         }
+
 
         public IActionResult Temperature()
         {
@@ -29,36 +35,33 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Temperature([Bind("ExternalKey, Temperature")] ModelPost modelPost)
+        public IActionResult Temperature(string externalKey, decimal temperature)
         {
-            if (String.IsNullOrEmpty(modelPost.ExternalKey))
+            if (String.IsNullOrEmpty(externalKey))
             {
                 ViewData["Message"] = "Nie podano ExternalKey.";
                 return View();
             }
-
-            var ws = new WeatherStationLogic(new WatherStationRepository());
-            ws.SaveTemperatureMeasurement(modelPost.ExternalKey, modelPost.Temperature);
+            _watherStationLogic.SaveTemperatureMeasurement(externalKey, temperature);
             return View();
         }
 
         [HttpGet]
         public IActionResult Measurement(string station, string date)
         {
-            var ws = new WeatherStationLogic(new WatherStationRepository());
             DateTime? chosenDateTemp = null;
             if (!String.IsNullOrEmpty(date))
                 chosenDateTemp = DateTime.ParseExact(date, "yyyyMMdd", CultureInfo.InvariantCulture);
 
-            var watherStations = ws.GetWatherStations();
+            var watherStations = _watherStationLogic.GetWatherStations();
             var chosenWatherStation = ChoseWatherStation(watherStations, station);
             ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
 
-            var dateMeasure = ws.GetTemperatureMeasurementsDates(chosenWatherStation.ExternalKey);
+            var dateMeasure = _watherStationLogic.GetTemperatureMeasurementsDates(chosenWatherStation.ExternalKey);
             var selectDate = dateMeasure.OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
             ViewBag.DateList = new SelectList(selectDate, chosenDateTemp.HasValue ? chosenDateTemp.Value.ToString("yyyy.MM.dd") : selectDate.FirstOrDefault());
 
-            var model = ws.GetTemperatureMeasurements(chosenWatherStation.ExternalKey, chosenDateTemp);
+            var model = _watherStationLogic.GetTemperatureMeasurements(chosenWatherStation.ExternalKey, chosenDateTemp);
             return View(model);
         }
 
@@ -75,11 +78,4 @@ namespace Web.Controllers
                 return watherStationList.Where(w => w.Name == station).FirstOrDefault();
         }
     }
-
-    public class ModelPost
-    {
-        public string ExternalKey { get; set; }
-        public decimal Temperature { get; set; }
-    }
-
 }

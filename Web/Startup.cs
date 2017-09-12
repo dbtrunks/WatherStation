@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Data;
 
 namespace Web
 {
@@ -29,6 +30,7 @@ namespace Web
         {
             // Add framework services.
             services.AddMvc();
+            services.AddTransient<IWatherStationRepository, WatherStationRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
