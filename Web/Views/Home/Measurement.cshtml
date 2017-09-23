@@ -52,7 +52,7 @@
        @foreach (var @m in @Model)
        {
           <text>
-            data.push([ @m.DateTime.ToString("HH.mm"),    @m.Temperature.ToString("0.00", @System.Globalization.CultureInfo.InvariantCulture) ]);
+            data.push([ @m.DateTime.ToString("H.mm"),    @m.Temperature.ToString("0.00", @System.Globalization.CultureInfo.InvariantCulture) ]);
           </text>
        }
             data.push([24, null]);
@@ -67,6 +67,10 @@
                 color: '#11ccae'
             });
 */
+             graphData.push({
+                 data: [[0, 0]],
+                color: '#0000'
+            });
 	// Graph from http://designmodo.com
 	// Lines Graph #############################################
 	$.plot($('#graph-lines'), graphData, {

@@ -47,11 +47,11 @@ namespace Data
             {
                 List<TemperatureMeasurement> result;
                 if (date.HasValue)
-                    result = TemperatureMeasurementQuery(externalKey, db).Where(t => t.DateTime.Date == date.Value.Date).ToList();
+                    result = TemperatureMeasurementQuery(externalKey, db).Where(t => t.DateTime.Date == date.Value.Date).OrderBy(x => x.DateTime).ToList();
                 else
                 {
                     var lastDate = TemperatureMeasurementQuery(externalKey, db).Select(l => l.DateTime.Date).LastOrDefault();
-                    result = TemperatureMeasurementQuery(externalKey, db).Where(t => t.DateTime.Date == lastDate).ToList();
+                    result = TemperatureMeasurementQuery(externalKey, db).Where(t => t.DateTime.Date == lastDate).OrderBy(x => x.DateTime).ToList();
                 }
                 return result;
             }
