@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Business;
 using Data;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Globalization;
 
@@ -24,10 +22,10 @@ namespace Web.Controllers
             var watherStations = _watherStationLogic.GetWatherStations();
             var chosenWatherStation = ChoseWatherStation(watherStations, station);
             ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
-            ViewData["Temperature"] = _watherStationLogic.GetLastTemperatureMeasurement(chosenWatherStation.ExternalKey).Temperature.ToString("##.##");
+            var measurement = _watherStationLogic.GetLastTemperatureMeasurement(chosenWatherStation.ExternalKey);
+            ViewData["Temperature"] = measurement?.Temperature.ToString("##.##") ?? "_";
             return View();
         }
-
 
         public IActionResult Temperature()
         {

@@ -79,7 +79,7 @@ void sendMessage(float temp)
    if(WiFi.status()== WL_CONNECTED){ 
    HTTPClient http;
  
-   http.begin("http://192.168.1.2/Home/Temperature");
+   http.begin("http://weatherstationwebapp.azurewebsites.net/Home/Temperature");
    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
    String Message = "ExternalKey=" + ExternalKey + "&Temperature=" + temp;
    int httpCode = http.POST(Message);  
