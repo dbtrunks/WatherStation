@@ -13,7 +13,7 @@ namespace Tests
 
         public WatherStationTest()
         {
-            optionsBuilder.UseSqlServer("Server=DBTRUNKS\\SQLEXPRESS;Database=WatherStation;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=WatherStation;Trusted_Connection=True;");
         }
 
         [Fact]
