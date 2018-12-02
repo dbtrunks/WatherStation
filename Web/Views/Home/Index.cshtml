@@ -3,13 +3,13 @@
 }
 
 <div align="center">
-@Html.DropDownList("SelectWatherStation", ViewBag.WatherStationList as SelectList, new {@disabled = "disabled", @class = "form-control" })
-<h3>Obecna teperatura wynosi @ViewData["Temperature"] &#176;C</h3>
+@Html.DropDownList("SelectWeatherStation", ViewBag.WeatherStationList as SelectList, new {@disabled = "disabled", @class = "form-control" })
+<h3>Obecna temperatura wynosi @ViewData["Temperature"] &#176;C</h3>
 <div>
 <script>
-    $("#SelectWatherStation").change(function () {
+    $("#SelectWeatherStation").change(function () {
         var strSelected = "";
-        $("#SelectWatherStation option:selected").each(function () {
+        $("#SelectWeatherStation option:selected").each(function () {
             strSelected += $(this)[0].value;
         });
         var url = "/Home/Index/" + strSelected;

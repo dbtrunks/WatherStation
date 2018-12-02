@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Data.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class MySqlMigration3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,9 +12,9 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DateTime = table.Column<DateTime>(nullable: false),
-                    Details = table.Column<string>(nullable: true)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    Details = table.Column<string>(nullable: true),
+                    DateTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,17 +22,17 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WatherStation",
+                name: "WeatherStation",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ExternalKey = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    Name = table.Column<string>(nullable: true),
+                    ExternalKey = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WatherStation", x => x.Id);
+                    table.PrimaryKey("PK_WeatherStation", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,26 +40,26 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DateTime = table.Column<DateTime>(nullable: false),
+                        .Annotation("MySQL:AutoIncrement", true),
+                    WeatherStationId = table.Column<int>(nullable: true),
                     Temperature = table.Column<decimal>(type: "decimal(9,4)", nullable: false),
-                    WatherStationId = table.Column<int>(nullable: true)
+                    DateTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TemperatureMeasurement", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TemperatureMeasurement_WatherStation_WatherStationId",
-                        column: x => x.WatherStationId,
-                        principalTable: "WatherStation",
+                        name: "FK_TemperatureMeasurement_WeatherStation_WeatherStationId",
+                        column: x => x.WeatherStationId,
+                        principalTable: "WeatherStation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TemperatureMeasurement_WatherStationId",
+                name: "IX_TemperatureMeasurement_WeatherStationId",
                 table: "TemperatureMeasurement",
-                column: "WatherStationId");
+                column: "WeatherStationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -73,7 +71,7 @@ namespace Data.Migrations
                 name: "TemperatureMeasurement");
 
             migrationBuilder.DropTable(
-                name: "WatherStation");
+                name: "WeatherStation");
         }
     }
 }

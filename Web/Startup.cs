@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Data;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.EntityFrameworkCore.Extensions;
 
 namespace Web
 {
@@ -25,9 +26,11 @@ namespace Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<MyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<MyDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("MySQLConnection")));
+
             services.AddMvc();
-            services.AddTransient<IWatherStationRepository, WatherStationRepository>();
+            services.AddTransient<IWeatherStationRepository, WeatherStationRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

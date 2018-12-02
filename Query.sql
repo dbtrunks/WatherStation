@@ -1,5 +1,5 @@
-select * FROM dbo.watherstation
+select * from weatherstation
 
-SELECT * from dbo.TemperatureMeasurement
+select * from TemperatureMeasurement
 
-select * FROM dbo.ReadLog
+select * from ReadLog

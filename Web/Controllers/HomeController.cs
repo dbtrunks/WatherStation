@@ -11,18 +11,18 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
-        readonly WeatherStationLogic _watherStationLogic;
-        public HomeController(IWatherStationRepository watherStationRepository)
+        readonly WeatherStationLogic _WeatherStationLogic;
+        public HomeController(IWeatherStationRepository WeatherStationRepository)
         {
-            _watherStationLogic = new WeatherStationLogic(watherStationRepository);
+            _WeatherStationLogic = new WeatherStationLogic(WeatherStationRepository);
         }
 
         public IActionResult Index(string station)
         {
-            var watherStations = _watherStationLogic.GetWatherStations();
-            var chosenWatherStation = ChoseWatherStation(watherStations, station);
-            ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
-            var measurement = _watherStationLogic.GetLastTemperatureMeasurement(chosenWatherStation.ExternalKey);
+            var WeatherStations = _WeatherStationLogic.GetWeatherStations();
+            var chosenWeatherStation = ChoseWeatherStation(WeatherStations, station);
+            ViewBag.WeatherStationList = new SelectList(WeatherStations.Select(w => w.Name), chosenWeatherStation.Name);
+            var measurement = _WeatherStationLogic.GetLastTemperatureMeasurement(chosenWeatherStation.ExternalKey);
             ViewData["Temperature"] = measurement?.Temperature.ToString("##.##") ?? "_";
             return View();
         }
@@ -40,7 +40,7 @@ namespace Web.Controllers
                 ViewData["Message"] = "Nie podano ExternalKey.";
                 return View();
             }
-            _watherStationLogic.SaveTemperatureMeasurement(externalKey, temperature);
+            _WeatherStationLogic.SaveTemperatureMeasurement(externalKey, temperature);
             return View();
         }
 
@@ -51,15 +51,15 @@ namespace Web.Controllers
             if (!String.IsNullOrEmpty(date))
                 chosenDateTemp = DateTime.ParseExact(date, "yyyyMMdd", CultureInfo.InvariantCulture);
 
-            var watherStations = _watherStationLogic.GetWatherStations();
-            var chosenWatherStation = ChoseWatherStation(watherStations, station);
-            ViewBag.WatherStationList = new SelectList(watherStations.Select(w => w.Name), chosenWatherStation.Name);
+            var WeatherStations = _WeatherStationLogic.GetWeatherStations();
+            var chosenWeatherStation = ChoseWeatherStation(WeatherStations, station);
+            ViewBag.WeatherStationList = new SelectList(WeatherStations.Select(w => w.Name), chosenWeatherStation.Name);
 
-            var dateMeasure = _watherStationLogic.GetTemperatureMeasurementsDates(chosenWatherStation.ExternalKey);
+            var dateMeasure = _WeatherStationLogic.GetTemperatureMeasurementsDates(chosenWeatherStation.ExternalKey);
             var selectDate = dateMeasure.OrderByDescending(d => d.Date).Select(s => s.Date.ToString("yyyy.MM.dd")).ToList();
             ViewBag.DateList = new SelectList(selectDate, chosenDateTemp.HasValue ? chosenDateTemp.Value.ToString("yyyy.MM.dd") : selectDate.FirstOrDefault());
 
-            var model = _watherStationLogic.GetTemperatureMeasurements(chosenWatherStation.ExternalKey, chosenDateTemp);
+            var model = _WeatherStationLogic.GetTemperatureMeasurements(chosenWeatherStation.ExternalKey, chosenDateTemp);
             return View(model);
         }
 
@@ -68,12 +68,12 @@ namespace Web.Controllers
             return View();
         }
 
-        private WatherStation ChoseWatherStation(List<WatherStation> watherStationList, string station)
+        private WeatherStation ChoseWeatherStation(List<WeatherStation> WeatherStationList, string station)
         {
             if (String.IsNullOrEmpty(station))
-                return watherStationList.FirstOrDefault();
+                return WeatherStationList.FirstOrDefault();
             else
-                return watherStationList.Where(w => w.Name == station).FirstOrDefault();
+                return WeatherStationList.Where(w => w.Name == station).FirstOrDefault();
         }
     }
 }

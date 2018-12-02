@@ -3,7 +3,6 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
@@ -15,15 +14,12 @@ namespace Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065");
 
             modelBuilder.Entity("Data.ReadLog", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateTime");
 
@@ -37,43 +33,42 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.TemperatureMeasurement", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateTime");
 
                     b.Property<decimal>("Temperature")
                         .HasColumnType("decimal(9,4)");
 
-                    b.Property<int?>("WatherStationId");
+                    b.Property<int?>("WeatherStationId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WatherStationId");
+                    b.HasIndex("WeatherStationId");
 
                     b.ToTable("TemperatureMeasurement");
                 });
 
-            modelBuilder.Entity("Data.WatherStation", b =>
+            modelBuilder.Entity("Data.WeatherStation", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("ExternalKey");
+                    b.Property<string>("ExternalKey")
+                        .IsRequired();
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("WatherStation");
+                    b.ToTable("WeatherStation");
                 });
 
             modelBuilder.Entity("Data.TemperatureMeasurement", b =>
                 {
-                    b.HasOne("Data.WatherStation", "WatherStation")
+                    b.HasOne("Data.WeatherStation", "WeatherStation")
                         .WithMany()
-                        .HasForeignKey("WatherStationId");
+                        .HasForeignKey("WeatherStationId");
                 });
 #pragma warning restore 612, 618
         }

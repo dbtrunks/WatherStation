@@ -6,14 +6,14 @@ namespace Business
 {
     public class WeatherStationLogic
     {
-        readonly IWatherStationRepository _watherStationRepository;
-        public WeatherStationLogic(IWatherStationRepository watherStationRepository)
+        readonly IWeatherStationRepository _weatherStationRepository;
+        public WeatherStationLogic(IWeatherStationRepository weatherStationRepository)
         {
-            _watherStationRepository = watherStationRepository;
+            _weatherStationRepository = weatherStationRepository;
         }
-        public WatherStation GetWatherStation(string externalKey)
+        public WeatherStation GetWeatherStation(string externalKey)
         {
-            var result = _watherStationRepository.GetWatherStationByExternalKey(new Guid(externalKey));
+            var result = _weatherStationRepository.GetWeatherStationByExternalKey(externalKey);
             return result;
         }
 
@@ -27,34 +27,34 @@ namespace Business
 
         public void SaveTemperatureMeasurement(string externalKey, decimal temperature)
         {
-            var watherStation = _watherStationRepository.GetWatherStationByExternalKey(new Guid(externalKey));
-            if (watherStation == null)
-                throw new ArgumentException(string.Format("Nie znaleziono stacji pogodowej o podanym kluczu {0}.", externalKey), "watherStation");
+            var weatherStation = _weatherStationRepository.GetWeatherStationByExternalKey(externalKey);
+            if (weatherStation == null)
+                throw new ArgumentException(string.Format("Nie znaleziono stacji pogodowej o podanym kluczu {0}.", externalKey), "weatherStation");
 
             if (!TemperatureRangeIsCorrect(temperature))
                 throw new ArgumentException(string.Format("Podana teperatura {0} nie miesci sie w przyjętym zakresie. ", temperature));
 
-            _watherStationRepository.SaveTemperatureMeasurement(watherStation.Id, temperature);
+            _weatherStationRepository.SaveTemperatureMeasurement(weatherStation.Id, temperature);
         }
 
-        public TemperatureMeasurement GetLastTemperatureMeasurement(Guid externalKey)
+        public TemperatureMeasurement GetLastTemperatureMeasurement(string externalKey)
         {
-            return _watherStationRepository.GetLastTemperatureMeasurement(externalKey);
+            return _weatherStationRepository.GetLastTemperatureMeasurement(externalKey);
         }
 
-        public List<TemperatureMeasurement> GetTemperatureMeasurements(Guid externalKey, DateTime? date)
+        public List<TemperatureMeasurement> GetTemperatureMeasurements(string externalKey, DateTime? date)
         {
-            return _watherStationRepository.GetTemperatureMeasurements(externalKey, date);
+            return _weatherStationRepository.GetTemperatureMeasurements(externalKey, date);
         }
 
-        public List<DateTime> GetTemperatureMeasurementsDates(Guid externalKey)
+        public List<DateTime> GetTemperatureMeasurementsDates(string externalKey)
         {
-            return _watherStationRepository.GetTemperatureMeasurementsDates(externalKey);
+            return _weatherStationRepository.GetTemperatureMeasurementsDates(externalKey);
         }
 
-        public List<WatherStation> GetWatherStations()
+        public List<WeatherStation> GetWeatherStations()
         {
-            return _watherStationRepository.GetWatherStations();
+            return _weatherStationRepository.GetWeatherStations();
         }
     }
 }

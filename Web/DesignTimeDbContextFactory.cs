@@ -21,10 +21,10 @@ namespace web
 
             var builder = new DbContextOptionsBuilder<MyDbContext>();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("MySQLConnection");
 
-            builder.UseSqlServer(connectionString);
-
+            // builder.UseSqlServer(connectionString);
+            builder.UseMySQL(connectionString);
             return new MyDbContext(builder.Options);
         }
     }

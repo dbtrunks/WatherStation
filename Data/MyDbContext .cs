@@ -4,7 +4,7 @@ namespace Data
 {
     public class MyDbContext : DbContext
     {
-        public DbSet<WatherStation> WatherStation { get; set; }
+        public DbSet<WeatherStation> WeatherStation { get; set; }
         public DbSet<TemperatureMeasurement> TemperatureMeasurement { get; set; }
         public DbSet<ReadLog> ReadLog { get; set; }
 

@@ -1,0 +1,1 @@
+﻿ INSERT INTO WeatherStation ( ExternalKey, Name) VALUES ('FBF1D8E9-F8BE', 'Mieszkanie');

@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data
 {
-    public class TemperatureMeasurement
+    public class WeatherStation
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id {get; set;}
-        public WeatherStation WeatherStation {get; set;} 
-        public decimal Temperature {get; set;}
-        public DateTime DateTime  {get; set;}
+        public string Name {get; set;}
+        [Required]
+        public string ExternalKey {get; set;}
     }
 }

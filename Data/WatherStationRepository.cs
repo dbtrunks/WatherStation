@@ -5,40 +5,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class WatherStationRepository : IWatherStationRepository
+    public class WeatherStationRepository : IWeatherStationRepository
     {
         readonly MyDbContext _dbContext;
-        public WatherStationRepository(MyDbContext dbContext)
+        public WeatherStationRepository(MyDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public WatherStation GetWatherStationByExternalKey(Guid externalKey)
+        public WeatherStation GetWeatherStationByExternalKey(String externalKey)
         {
-            var result = _dbContext.WatherStation.Where(x => x.ExternalKey == externalKey).FirstOrDefault();
+            var result = _dbContext.WeatherStation.Where(x => x.ExternalKey == externalKey).FirstOrDefault();
             return result;
         }
 
-        public void SaveTemperatureMeasurement(int watherStationID, decimal temperature)
+        public void SaveTemperatureMeasurement(int WeatherStationID, decimal temperature)
         {
             var tm = new TemperatureMeasurement
             {
                 Temperature = temperature,
                 DateTime = DateTime.Now
             };
-            tm.WatherStation = _dbContext.WatherStation.Where(x => x.Id == watherStationID).First();
+            tm.WeatherStation = _dbContext.WeatherStation.Where(x => x.Id == WeatherStationID).First();
             _dbContext.TemperatureMeasurement.Add(tm);
 
             _dbContext.SaveChanges();
         }
 
-        public TemperatureMeasurement GetLastTemperatureMeasurement(Guid externalKey)
+        public TemperatureMeasurement GetLastTemperatureMeasurement(String externalKey)
         {
             var result = TemperatureMeasurementQuery(externalKey, _dbContext).OrderByDescending(t => t.Id).FirstOrDefault();
             return result;
         }
 
-        public List<TemperatureMeasurement> GetTemperatureMeasurements(Guid externalKey, DateTime? date)
+        public List<TemperatureMeasurement> GetTemperatureMeasurements(String externalKey, DateTime? date)
         {
 
             List<TemperatureMeasurement> result;
@@ -60,24 +60,24 @@ namespace Data
 
         }
 
-        public List<DateTime> GetTemperatureMeasurementsDates(Guid externalKey)
+        public List<DateTime> GetTemperatureMeasurementsDates(String externalKey)
         {
             var result = TemperatureMeasurementQuery(externalKey, _dbContext).Select(s => s.DateTime.Date).GroupBy(g => g.Date).Select(grp => grp.FirstOrDefault()).ToList();
             return result;
 
         }
 
-        public List<WatherStation> GetWatherStations()
+        public List<WeatherStation> GetWeatherStations()
         {
 
-            var result = _dbContext.WatherStation.ToList();
+            var result = _dbContext.WeatherStation.ToList();
             return result;
 
         }
 
-        private static IQueryable<TemperatureMeasurement> TemperatureMeasurementQuery(Guid externalKey, MyDbContext db)
+        private static IQueryable<TemperatureMeasurement> TemperatureMeasurementQuery(String externalKey, MyDbContext db)
         {
-            return db.TemperatureMeasurement.Include("WatherStation").Where(t => t.WatherStation.ExternalKey == externalKey);
+            return db.TemperatureMeasurement.Include("WeatherStation").Where(t => t.WeatherStation.ExternalKey == externalKey);
         }
     }
 }

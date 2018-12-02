@@ -2,9 +2,9 @@
 @{
     ViewData["Title"] = "Pomiar";
 }
-<h2>Pomiar tęperatury</h2>
+<h2>Pomiar temperatury</h2>
 
-@Html.DropDownList("SelectWatherStation", ViewBag.WatherStationList as SelectList, new {@disabled = "disabled", @class = "form-control" })
+@Html.DropDownList("SelectWeatherStation", ViewBag.WeatherStationList as SelectList, new {@disabled = "disabled", @class = "form-control" })
 @Html.DropDownList("SelectDate", ViewBag.DateList as SelectList, new { @class = "form-control" })
 
 <div id="graph-wrapper">
@@ -25,9 +25,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="~/js/jquery.flot.min.js"></script>
 <script>
-    $("#SelectWatherStation").change(function () {
+    $("#SelectWeatherStation").change(function () {
         var strSelected = "";
-        $("#SelectWatherStation option:selected").each(function () {
+        $("#SelectWeatherStation option:selected").each(function () {
             strSelected += $(this)[0].value;
         });
         var url = "/Home/Measurement/" + strSelected;
@@ -36,7 +36,7 @@
     $("#SelectDate").change(function () {
             var strSelected = "";
             var strSelectedWS = "";
-            $("#SelectWatherStation option:selected").each(function () {
+            $("#SelectWeatherStation option:selected").each(function () {
                 strSelectedWS += $(this)[0].value;
             });
             $("#SelectDate option:selected").each(function () {
